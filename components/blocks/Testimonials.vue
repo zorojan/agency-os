@@ -11,9 +11,11 @@ const testimonials = computed(() => {
 
 	if (!testimonialsArray) return [];
 
-	return testimonialsArray.map((item) => {
-		return item.testimonials_id as Testimonial;
-	});
+	return testimonialsArray
+		.map((item) => {
+			return item.testimonials_id as Testimonial;
+		})
+		.filter((testimonial): testimonial is Testimonial => testimonial !== null && testimonial !== undefined);
 });
 
 const testimonialContainer: Ref<HTMLElement | null> = ref(null);
@@ -149,14 +151,14 @@ function handleNavButton(direction: 'left' | 'right') {
 							class="inline-block w-16 h-16 text-gray-300 border rounded-button"
 						/>
 
-						<div class="relative">
-							<p v-if="testimonial.title" class="font-semibold text-primary font-display lg:text-2xl">
-								{{ testimonial.title }}
-							</p>
-							<p class="text-sm text-gray-700 lg:text-lg dark:text-gray-300">
-								{{ testimonial.subtitle }} at {{ testimonial.company }}
-							</p>
-						</div>
+					<div class="relative">
+						<p v-if="testimonial?.title" class="font-semibold text-primary font-display lg:text-2xl">
+							{{ testimonial.title }}
+						</p>
+						<p class="text-sm text-gray-700 lg:text-lg dark:text-gray-300">
+							{{ testimonial?.subtitle }} at {{ testimonial?.company }}
+						</p>
+					</div>
 					</div>
 				</div>
 			</div>

@@ -6,9 +6,9 @@ const props = defineProps<{
 }>();
 
 const galleryItems = computed(() => {
-	return props.data.gallery_items?.map((item: BlockGalleryFile) => {
-		return item.directus_files_id as File;
-	});
+	return props.data.gallery_items
+		?.map((item: BlockGalleryFile) => item.directus_files_id as File)
+		?.filter((file): file is File => file !== null && file !== undefined) || [];
 });
 </script>
 
@@ -16,6 +16,6 @@ const galleryItems = computed(() => {
 	<BlockContainer>
 		<TypographyTitle v-if="data.title">{{ data.title }}</TypographyTitle>
 		<TypographyHeadline v-if="data.headline" :content="data.headline" size="lg" />
-		<VGallery v-if="galleryItems && galleryItems.length > 0" :items="galleryItems" />
+		<VGallery v-if="galleryItems.length > 0" :items="galleryItems" />
 	</BlockContainer>
 </template>

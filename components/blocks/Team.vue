@@ -33,14 +33,22 @@ function splitArray(array: any[], numParts: number = 2) {
 }
 
 const teamToDisplay = computed(() => {
+	const teamData = unref(team);
+	if (!teamData || !Array.isArray(teamData)) {
+		return {
+			left: [],
+			right: [],
+		};
+	}
+
 	// Split the array into two arrays
-	const teamMembersSplit = splitArray(unref(team), 2);
+	const teamMembersSplit = splitArray(teamData, 2);
 
 	// Return the two arrays as an object
 	return {
 		// Duplicate each array so we can animate the last item to the first position
-		left: [...teamMembersSplit[0], ...teamMembersSplit[0]],
-		right: [...teamMembersSplit[1], ...teamMembersSplit[1]],
+		left: [...(teamMembersSplit[0] || []), ...(teamMembersSplit[0] || [])],
+		right: [...(teamMembersSplit[1] || []), ...(teamMembersSplit[1] || [])],
 	};
 });
 

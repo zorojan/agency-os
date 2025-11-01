@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { BlockLogocloud, BlockLogocloudFile, File } from '~/types';
 
-defineProps<{
+const props = defineProps<{
 	data: BlockLogocloud;
 }>();
 
@@ -9,12 +9,12 @@ const { fileUrl } = useFiles();
 </script>
 <template>
 	<BlockContainer>
-		<TypographyTitle v-if="data?.title">{{ data?.title }}</TypographyTitle>
-		<TypographyHeadline v-if="data?.headline" :content="data?.headline" size="lg" />
+		<TypographyTitle v-if="props.data?.title">{{ props.data?.title }}</TypographyTitle>
+		<TypographyHeadline v-if="props.data?.headline" :content="props.data?.headline" size="lg" />
 		<div class="flow-root mt-8 lg:mt-10">
-			<div v-if="data.logos && data.logos.length > 0" class="grid gap-4 md:grid-cols-4 md:gap-8">
+			<div v-if="props.data?.logos && props.data.logos.length > 0" class="grid gap-4 md:grid-cols-4 md:gap-8">
 				<div
-					v-for="(logo, fileIdx) in data?.logos as BlockLogocloudFile[]"
+					v-for="(logo, fileIdx) in (props.data?.logos as BlockLogocloudFile[]).filter((l) => l && (l.directus_files_id as File)?.id)"
 					:key="logo.id"
 					v-motion
 					:initial="{

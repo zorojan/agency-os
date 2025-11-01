@@ -10,21 +10,26 @@ const props = defineProps<GalleryProps>();
 
 const { fileUrl } = useFiles();
 
+// Filter out null/undefined items
+const validItems = computed(() => {
+	return props.items?.filter((item): item is File => item && !!item.id) || [];
+});
+
 const isOpen = ref(false);
 const currentItemIdx = ref(0);
 
 const currentItem = computed(() => {
-	return props.items[currentItemIdx.value];
+	return validItems.value[currentItemIdx.value];
 });
 
 function next() {
 	// If the current item is the last item, go back to the first item
-	currentItemIdx.value = currentItemIdx.value === props.items.length - 1 ? 0 : currentItemIdx.value + 1;
+	currentItemIdx.value = currentItemIdx.value === validItems.value.length - 1 ? 0 : currentItemIdx.value + 1;
 }
 
 function prev() {
 	// If the current item is the first item, go to the last item
-	currentItemIdx.value = currentItemIdx.value === 0 ? props.items.length - 1 : currentItemIdx.value - 1;
+	currentItemIdx.value = currentItemIdx.value === 0 ? validItems.value.length - 1 : currentItemIdx.value - 1;
 }
 
 function toggle() {
@@ -66,7 +71,7 @@ onUnmounted(() => {
 	<!-- Gallery -->
 	<div class="gap-4 mt-4 md:columns-3">
 		<button
-			v-for="(item, itemIdx) in items"
+			v-for="(item, itemIdx) in validItems"
 			:key="item.id"
 			:class="[
 				'block relative w-full mb-6 overflow-hidden border dark:border-gray-700 rounded-card focus:outline-none',
@@ -149,13 +154,13 @@ onUnmounted(() => {
 					<!-- Image -->
 					<div class="relative flex flex-col items-center justify-center w-full h-full p-20 mx-auto">
 						<p
-							v-if="currentItem.description"
+							v-if="currentItem?.description"
 							class="inline-block px-6 py-2 text-sm text-white bg-gray-900 rounded-t-xl"
 						>
 							{{ currentItem.description }}
 						</p>
 
-						<template v-for="(item, itemIdx) in items" :key="item.id">
+						<template v-for="(item, itemIdx) in validItems" :key="item.id">
 							<NuxtImg
 								v-show="currentItemIdx === itemIdx"
 								:src="item.id"
